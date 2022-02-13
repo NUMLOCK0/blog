@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>打卡</title>
+        <style >
+            .btn {
+                width: 100px;
+                height: 100px;
+                background-color: aquamarine;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 30px;
+                margin-top: 30px;
+            }
+            .warp {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+            }
+        </style>
+        <script>
+
+            const up = function () {
+                const dom = document.getElementById("status")
+                const token = window
+                    .localStorage
+                    .getItem("token")
+                fetch(`up?token=${token}&type=上班`)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (myJson) {
+                        if (myJson.status) {
+                            dom.innerHTML = "上班打卡失败"
+                        } else {
+                            dom.innerHTML = "上班打卡成功"
+                        }
+                    });
+            }
+
+            const down = function () {
+                const dom = document.getElementById("status")
+                const token = window
+                    .localStorage
+                    .getItem("token")
+                fetch(`up?token=${token}&type=下班`)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (json) {
+                        if (json.status) {
+                            dom.innerHTML = "下班打卡失败"
+                        } else {
+                            dom.innerHTML = "下班打卡成功"
+                        }
+
+                    });
+            }
+
+            const login = function () {
+                const dom = document.getElementById("status")
+                var searchParams = new URLSearchParams()
+                searchParams.set('account', '闫剑涛')
+                searchParams.set('password', '203750')
+                fetch('https://ybsapi.yidejia.com/api/authorizations', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded'
+                    },
+                    body: searchParams
+
+                })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (myJson) {
+
+                        dom.innerHTML = "登录成功"
+                        window
+                            .localStorage
+                            .setItem("token", myJson.meta.token)
+                        console.log(myJson);
+                    });
+            }
+        </script>
+    </head>
+
+    <body>
+        <div id="status"></div>
+        <div class="warp">
+
+            <div class="btn" onclick="login()">
+                登录
+            </div>
+            <div class="btn" onclick="up()">
+                打上班卡
+            </div>
+            <div class="btn" onclick="down()">
+                打下班卡
+            </div>
+        </div>
+    </body>
+</html>
